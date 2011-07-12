@@ -12,7 +12,7 @@ class RichEdge( edge:Edge ) extends RichElement[Edge]( edge ) with Edge {
 	def getTargetNode[T<:Node]():T = element.getTargetNode[T]
 	def source:Node = element.getNode0[Node]
 	def target:Node = element.getNode1[Node]
-	def getOpposite[T<:Node]( node:T ):T = element.getOpposite[T]( node )
+	def getOpposite[T<:Node]( node:Node ):T = element.getOpposite[T]( node )
 	def opposite[T<:Node](node:T):T = element.getOpposite[T](node)
 	
 	def apply(i:Int):Node = {
