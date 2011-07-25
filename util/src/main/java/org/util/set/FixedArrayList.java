@@ -29,7 +29,7 @@ import java.util.RandomAccess;
 public class FixedArrayList<E>
 	implements Collection<E>, RandomAccess
 {
-// Attributes
+// Attribute
 
 	/**
 	 * List of elements.
@@ -46,31 +46,25 @@ public class FixedArrayList<E>
 	 */
 	protected int lastIndex = -1;
 
-// Constructors
+// Construction
 
-	public
-	FixedArrayList()
-	{
+	public FixedArrayList() {
 		elements = new ArrayList<E>();
-		freeIndices = new ArrayList<Integer>( 16 );
+		freeIndices = new ArrayList<Integer>(16);
 	}
 
-	public
-	FixedArrayList( int capacity )
-	{
-		elements = new ArrayList<E>( capacity );
-		freeIndices = new ArrayList<Integer>( 16 );
+	public FixedArrayList(int capacity) {
+		elements = new ArrayList<E>(capacity);
+		freeIndices = new ArrayList<Integer>(16);
 	}
 
-// Accessors
+// Access
 
 	/**
 	 * Number of elements in the array.
 	 * @return The number of elements in the array.
 	 */
-	public int
-	size()
-	{
+	public int size() {
 		return elements.size() - freeIndices.size();
 	}
 
@@ -78,16 +72,25 @@ public class FixedArrayList<E>
 	 * Real size of the array, counting elements that have been erased.
 	 * @see #unsafeGet(int)
 	 */
-	public int
-	realSize()
-	{
+	public int realSize() {
 		return elements.size();
 	}
 
-	public boolean
-	isEmpty()
-	{
-		return( size() == 0 );
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+	
+	/**
+	 * True if the given index i references a value.
+	 * @param i The index to test.
+	 * @return True if a value exists at the given index.
+	 */
+	public boolean hasIndex(int i) {
+		if(i>0 && i<elements.size()) {
+			return elements.get(i) != null;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -95,12 +98,10 @@ public class FixedArrayList<E>
 	 * @param i The element index.
 	 * @return The element at index <code>i</code>.
 	 */
-	public E
-	get( int i )
-	{
-		E e = elements.get( i );
+	public E get(int i) {
+		E e = elements.get(i);
 
-		if( e == null )
+		if(e == null)
 			throw new NoSuchElementException( "no element at index " + i );
 
 		return e;
@@ -112,27 +113,21 @@ public class FixedArrayList<E>
 	 * @param i The element index.
 	 * @return The element at index <code>i</code>.
 	 */
-	public E
-	unsafeGet( int i )
-	{
+	public E unsafeGet(int i) {
 		return elements.get( i );
 	}
 
-	public boolean
-	contains( Object o )
-	{
+	public boolean contains(Object o) {
 		int n = elements.size();
 
-		for( int i=0; i<n; ++i )
-		{
-			E e = elements.get( i );
+		for(int i=0; i<n; ++i) {
+			E e = elements.get(i);
 	
-			if( e != null )
-			{
-				if( e == o )
+			if(e != null) {
+				if(e == o)
 					return true;
 
-				if( elements.equals( o ) )
+				if(elements.equals(o))
 					return true;
 			}
 		}
@@ -140,12 +135,9 @@ public class FixedArrayList<E>
 		return false;
 	}
 
-	public boolean
-	containsAll( Collection<?> c )
-	{
-		for( Object o: c )
-		{
-			if( ! contains( o ) )
+	public boolean containsAll(Collection<?> c) {
+		for(Object o: c) {
+			if(! contains(o))
 				return false;
 		}
 
@@ -154,31 +146,25 @@ public class FixedArrayList<E>
 
 	@Override
     @SuppressWarnings("unchecked")
-	public boolean
-	equals( Object o )
-	{
-		if( o instanceof FixedArrayList )
-		{
+	public boolean equals(Object o) {
+		if(o instanceof FixedArrayList) {
 			FixedArrayList<? extends E> other = (FixedArrayList<? extends E>) o;
 
 			int n = size();
 
-			if( other.size() == n )
-			{
-				for( int i=0; i<n; ++i )
-				{
-					E e0 = elements.get( i );
-					E e1 = other.elements.get( i );
+			if(other.size() == n) {
+				for(int i=0; i<n; ++i) {
+					E e0 = elements.get(i);
+					E e1 = other.elements.get(i);
 
-					if( e0 != e1 )
-					{
-						if( e0 == null && e1 != null )
+					if(e0 != e1) {
+						if(e0 == null && e1 != null)
 							return false;
 
-						if( e0 != null && e1 == null )
+						if(e0 != null && e1 == null)
 							return false;
 
-						if( ! e0.equals( e1 ) )
+						if(! e0.equals(e1))
 							return false;
 					}
 				}
@@ -190,9 +176,7 @@ public class FixedArrayList<E>
 		return false;
 	}
 
-	public java.util.Iterator<E>
-	iterator()
-	{
+	public java.util.Iterator<E> iterator() {
 		return new FixedArrayIterator();
 	}
 
@@ -200,9 +184,7 @@ public class FixedArrayList<E>
 	 * Last index used by the {@link #add(Object)} method.
 	 * @return The last insertion index.
 	 */
-	public int
-	getLastIndex()
-	{
+	public int getLastIndex() {
 		return lastIndex;
 	}
 	
@@ -210,39 +192,32 @@ public class FixedArrayList<E>
 	 * The index that will be used in case of a next insertion in this array.
 	 * @return
 	 */
-	public int
-	getNextAddIndex()
-	{
+	public int getNextAddIndex() {
 		int n = freeIndices.size();
 		
-		if( n > 0 )
-		     return freeIndices.get( n - 1 );
+		if(n > 0)
+		     return freeIndices.get(n - 1);
 		else return elements.size();
 	}
 
-	public Object[]
-	toArray()
-	{
+	public Object[] toArray() {
 		int n = size();
 		int m = elements.size();
 		int j = 0;
 		Object a[] = new Object[n];
 
-		for( int i=0; i<m; ++i )
-		{
-			E e = elements.get( i );
+		for(int i=0; i<m; ++i) {
+			E e = elements.get(i);
 
-			if( e != null )
+			if(e != null)
 				a[j++] = e;
 		}
 
-		assert( j == n );
+		assert(j == n);
 		return a;
 	}
 
-	public <T> T[]
-	toArray( T[] a )
-	{
+	public <T> T[] toArray(T[] a) {
 		// TODO
 		throw new RuntimeException( "not implemented yet" );
 	}
@@ -251,105 +226,135 @@ public class FixedArrayList<E>
 
 	/**
 	 * Add one <code>element</code> in the array. The index used for inserting
-	 * the element is then available using {@link #getLastIndex()}.
+	 * the element is then available using {@link #getLastIndex()}. This method
+	 * complexity is O(1).
 	 * @see #getLastIndex()
 	 * @param element The element to add.
 	 * @return Always true.
 	 * @throws NullPointerException If a null value is inserted.
 	 */
-	public boolean
-	add( E element )
-		throws java.lang.NullPointerException
-	{
-		if( element == null )
+	public boolean add(E element) throws java.lang.NullPointerException {
+		if(element == null)
 			throw new java.lang.NullPointerException( "this array cannot contain null value" );
 
 		int n = freeIndices.size();
 
-		if( n > 0 )
-		{
-			int i = freeIndices.remove( n - 1 );
-			elements.set( i, element );
+		if(n > 0) {
+			int i = freeIndices.remove(n - 1);
+			elements.set(i, element);
 			lastIndex = i;
-		}
-		else
-		{
-			elements.add( element );
+		} else {
+			elements.add(element);
 			lastIndex = elements.size() - 1;
 		}
 
 		return true;
 	}
 
-	public boolean
-	addAll( Collection<? extends E> c )
-		throws UnsupportedOperationException
-	{
+	public boolean addAll(Collection<? extends E> c) throws UnsupportedOperationException {
 		java.util.Iterator<? extends E> k = c.iterator();
 		
-		while( k.hasNext() )
-		{
-			add( k.next() );
+		while(k.hasNext()) {
+			add(k.next());
 		}
 
 		return true;
 	}
+	
+	/**
+	 * This operation set the i-th cell with the given value.
+	 * 
+	 * This works only
+	 * if the cell is empty, or if i is larger or equal to the size of the
+	 * array (if larger, empty cells are added to fill the gap, and free
+	 * indices will be used by the add() method).
+	 * 
+	 * If the cell is not empty, the return value is false.
+	 * 
+	 * This method is a convenience method, and its complexity is not O(1)
+	 * like the add() and remove() methods. At worse the complexity is O(n).
+	 * It is optimized so that when adding the element whose id is the one
+	 * given by {@link FixedArrayList#getNextAddIndex()} its complexity is O(1).
+	 * 
+	 * @param i The index of the cell to change.
+	 * @param element The value to set.
+	 * @return false If the insertion was not successful (there was already
+	 * something in the set).
+	 */
+	public boolean addAt(int i, E element) {
+		if(i >= elements.size()) {
+			// Add at the end or at a non existent position at the end.
+			
+			int n = elements.size();
+			int d = i - n;
+			
+			for(int j=0; j<d; j++) {
+				elements.add(null);
+				freeIndices.add(n+j);
+				
+			}
+			elements.add(element);
+			assert(elements.size()-1 == i);
+			lastIndex = i;
+		} else {
+			// Add at an existing position
+			if(elements.get(i) == null) {
+				// Add the element and release the index in the index list.
+				elements.set(i, element);
+				freeIndices.remove(freeIndices.lastIndexOf(i));	// O(n)
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 
 	/**
-	 * Remove the element at index <code>i</code>.
+	 * Remove the element at index <code>i</code>. This method complexity
+	 * is O(1).
 	 * @param i Index of the element to remove.
 	 * @return The removed element.
 	 */
-	public E
-	remove( int i )
-	{
+	public E remove(int i) {
 		int n = elements.size();
 
-		if( i < 0 || i >= n )
-			throw new ArrayIndexOutOfBoundsException( "index "+i+" does not exist" );
+		if(i < 0 || i >= n)
+			throw new ArrayIndexOutOfBoundsException("index "+i+" does not exist");
 
-		if( n > 0 )
-		{
+		if(n > 0) {
 			if( elements.get( i ) == null )
-				throw new NullPointerException( "no element stored at index " + i );
+				throw new NullPointerException("no element stored at index " + i);
 
-			if( i == ( n - 1 ) )
-			{
+			if(i == (n - 1)) {
 				return elements.remove( i );
-			}
-			else
-			{
-				E e = elements.get( i );
-				elements.set( i, null );
-				freeIndices.add( i );
+			} else {
+				E e = elements.get(i);
+				elements.set(i, null);
+				freeIndices.add(i);
 				return e;
 			}
 		}
 
-		throw new ArrayIndexOutOfBoundsException( "index "+i+" does not exist" );
+		throw new ArrayIndexOutOfBoundsException("index "+i+" does not exist");
 	}
 
-	protected void
-	removeIt( int i )
-	{
-		remove( i );
+	protected void removeIt(int i) {
+		remove(i);
 	}
 
 	/**
-	 * Remove the element <code>e</code>.
+	 * Remove the element <code>e</code>. At worse the complexity is
+	 * O(n).
 	 * @param e The element to remove.
 	 * @return True if removed.
 	 */
-	public boolean
-	remove( Object e )
-	{
+	public boolean remove(Object e) {
 		int n = elements.size();
 
-		for( int i=0; i<n; ++i )
-		{
-			if( elements.get( i ) == e )
-			{
-				elements.remove( i );
+		for(int i=0; i<n; ++i) {
+			if(elements.get(i) == e) {
+				elements.remove(i);
 				return true;
 			}
 		}
@@ -357,91 +362,64 @@ public class FixedArrayList<E>
 		return false;
 	}
 
-	public boolean
-	removeAll( Collection<?> c )
-	{
+	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException( "not implemented yet" );
 	}
 
-	public boolean
-	retainAll( Collection<?> c )
-	{
+	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException( "not implemented yet" );
 	}
 
-	public void
-	clear()
-	{
+	public void clear() {
 		elements.clear();
 		freeIndices.clear();
 	}
 
 // Nested classes
 
-protected class FixedArrayIterator
-	implements java.util.Iterator<E>
-{
+protected class FixedArrayIterator implements java.util.Iterator<E> {
 	int i;
 
-	public
-	FixedArrayIterator()
-	{
+	public FixedArrayIterator() {
 		i = -1;
 	}
 
-	public boolean
-	hasNext()
-	{
+	public boolean hasNext() {
 		int n = elements.size();
 
-		for( int j=i+1; j<n; ++j )
-		{
-			if( elements.get( j ) != null )
+		for(int j=i+1; j<n; ++j) {
+			if(elements.get(j) != null)
 				return true;
 		}
 
 		return false;
 	}
 
-	public E
-	next()
-	{
+	public E next() {
 		int n = elements.size();
 
-		for( int j=i+1; j<n; ++j )
-		{
-			E e = elements.get( j );
+		for(int j=i+1; j<n; ++j) {
+			E e = elements.get(j);
 
-			if( e != null )
-			{
+			if(e != null) {
 				i = j;
 				return e;
 			}
 		}
 
-		throw new NoSuchElementException( "no more elements in iterator" );
+		throw new NoSuchElementException("no more elements in iterator");
 	}
 
-	public void
-	remove()
-		throws UnsupportedOperationException
-	{
-//		throw new UnsupportedOperationException( "not implemented yet" );
-
-		if( i >= 0 && i < elements.size() && elements.get( i ) != null )
-		{
-			removeIt( i );	// A parent class method cannot be called if it has
+	public void remove() throws UnsupportedOperationException {
+		if(i >= 0 && i < elements.size() && elements.get(i) != null) {
+			removeIt(i);	// A parent class method cannot be called if it has
 							// the same name as one in the inner class
 							// (normal), but even if they have distinct
 							// arguments types. Hence this strange removeIt()
 							// method...
+		} else {
+			throw new IllegalStateException("no such element");
 		}
-		else
-		{
-			throw new IllegalStateException( "no such element" );
-		}
-
 	}
 }
-
 }

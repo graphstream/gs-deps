@@ -8,7 +8,7 @@
 #
 
 # No boolean array, a bit set is better
-types="Byte:byte Short:short Int:int Long:long Char:char Float:float Double:double"
+types="Byte:byte Short:short Integer:int Long:long Character:char Float:float Double:double"
 
 for t in ${types}
 do
@@ -25,7 +25,7 @@ do
 	# And create files...
 	rm -f ${file}
 	sed -e "286r MoreBaseArrayMethods.txt" -e "341,349d" -e "s/\<Array\>/${Type}Array/g" Array.java > ${file}.tmp
-	sed -e "s/Object/${type}/" ${file}.tmp > ${file}
+	sed -e "s/Iterator<Object>/Iterator<${Type}>/g" -e "s/public Object next()/public ${Type} next()/g" -e "s/Object/${type}/" ${file}.tmp > ${file}
 	rm -f ${file}.tmp
 
 done

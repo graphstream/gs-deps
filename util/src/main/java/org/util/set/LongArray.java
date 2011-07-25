@@ -1,5 +1,6 @@
 package org.util.set;
 
+import java.util.Iterator;
 
 /**
  * long sequence.
@@ -558,6 +559,41 @@ public class LongArray
 		other.cap = t2;
 	}
 
+// Access
+	
+	/**
+	 * Search for the given element.
+	 * 
+	 * @returns The index of the element if found, else -1.
+	 */
+	public int
+	search( long element )
+	{
+		int n = beg.length;
+		
+		for( int i=0; i<n; i++ )
+		{
+			if( beg[i] == element )
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public Iterator<Long>
+	iterator()
+	{
+		return new Iterator<Long>()
+		{
+			int pos = 0;
+			public boolean hasNext() { return (pos<pte); }
+			public Long next() { return beg[pos++]; }
+			public void remove() { throw new UnsupportedOperationException(); }
+		};
+	}
+	
 // Commands -- Utility
 	
 	/**

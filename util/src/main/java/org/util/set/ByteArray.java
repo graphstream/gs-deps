@@ -1,5 +1,6 @@
 package org.util.set;
 
+import java.util.Iterator;
 
 /**
  * byte sequence.
@@ -558,6 +559,41 @@ public class ByteArray
 		other.cap = t2;
 	}
 
+// Access
+	
+	/**
+	 * Search for the given element.
+	 * 
+	 * @returns The index of the element if found, else -1.
+	 */
+	public int
+	search( byte element )
+	{
+		int n = beg.length;
+		
+		for( int i=0; i<n; i++ )
+		{
+			if( beg[i] == element )
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public Iterator<Byte>
+	iterator()
+	{
+		return new Iterator<Byte>()
+		{
+			int pos = 0;
+			public boolean hasNext() { return (pos<pte); }
+			public Byte next() { return beg[pos++]; }
+			public void remove() { throw new UnsupportedOperationException(); }
+		};
+	}
+	
 // Commands -- Utility
 	
 	/**

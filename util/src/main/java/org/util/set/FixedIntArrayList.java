@@ -31,12 +31,12 @@ public class FixedIntArrayList
 	/**
 	 * List of elements.
 	 */
-	protected IntArray elements = new IntArray();
+	protected IntegerArray elements = new IntegerArray();
 
 	/**
 	 * List of free indices.
 	 */
-	protected IntArray freeIndices = new IntArray();
+	protected IntegerArray freeIndices = new IntegerArray();
 
 	/**
 	 * Last inserted element index.
@@ -48,15 +48,15 @@ public class FixedIntArrayList
 	public
 	FixedIntArrayList()
 	{
-		elements    = new IntArray();
-		freeIndices = new IntArray();
+		elements    = new IntegerArray();
+		freeIndices = new IntegerArray();
 	}
 
 	public
 	FixedIntArrayList( int capacity )
 	{
-		elements    = new IntArray( capacity );
-		freeIndices = new IntArray( 16 );
+		elements    = new IntegerArray( capacity );
+		freeIndices = new IntegerArray( 16 );
 	}
 
 // Accessors
@@ -289,8 +289,8 @@ public class FixedIntArrayList
 	public void
 	clear()
 	{
-		elements    = new IntArray();
-		freeIndices = new IntArray();
+		elements    = new IntegerArray();
+		freeIndices = new IntegerArray();
 	}
 
 // Nested classes

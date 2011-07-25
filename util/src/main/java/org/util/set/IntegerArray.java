@@ -1,21 +1,22 @@
 package org.util.set;
 
+import java.util.Iterator;
 
 /**
- * char sequence.
+ * int sequence.
  *
  * @author Antoine Dutot
  * @since 19980804
  * @version 0.1
  */
-public class CharArray
+public class IntegerArray
 {
 // Attributes
 
 	/**
-	 * CharArray of #cap cells.
+	 * IntegerArray of #cap cells.
 	 */
-	protected char[] beg;
+	protected int[] beg;
 	
 	/**
 	 * Number of used cells (always &lt; #cap).
@@ -33,7 +34,7 @@ public class CharArray
 	 * New array with an initial capacity of four items.
 	 */
 	public
-	CharArray()
+	IntegerArray()
 	{
 		this( 4 );
 	}
@@ -45,7 +46,7 @@ public class CharArray
 	 * #isEmpty(), you must use #set_count() to explicitly size it.
 	 */
 	public
-	CharArray( int initial_capacity )
+	IntegerArray( int initial_capacity )
 	{
 		if( initial_capacity < 1 )
 		{
@@ -66,7 +67,7 @@ public class CharArray
 	 * New copy of other. DEPRECATED: use #clone().
 	 */
 	public
-	CharArray( CharArray other )
+	IntegerArray( IntegerArray other )
 	{
 		int n;
 	
@@ -161,7 +162,7 @@ public class CharArray
 	/**
 	 * i-th item.
 	 */
-	public char
+	public int
 	get( int i )
 		throws InvalidIndexException
 	{
@@ -178,7 +179,7 @@ public class CharArray
 	/**
 	 * i-th item.
 	 */
-	public char
+	public int
 	item( int i )
 		throws InvalidIndexException
 	{
@@ -196,7 +197,7 @@ public class CharArray
 	 * First item.
 	 * requires(not empty): ! #isEmpty()
 	 */
-	public char
+	public int
 	getFront()
 		throws InvalidIndexException
 	{
@@ -213,7 +214,7 @@ public class CharArray
 	 * First item.
 	 * requires(not empty): ! #isEmpty()
 	 */
-	public char
+	public int
 	front()
 		throws InvalidIndexException
 	{
@@ -230,7 +231,7 @@ public class CharArray
 	 * Last item.
 	 * requires(not empty): ! #isEmpty()
 	 */
-	public char
+	public int
 	getBack()
 		throws InvalidIndexException
 	{
@@ -247,7 +248,7 @@ public class CharArray
 	 * Last item.
 	 * requires(not empty): ! #isEmpty()
 	 */
-	public char
+	public int
 	back()
 		throws InvalidIndexException
 	{
@@ -266,7 +267,7 @@ public class CharArray
 	 * the representation). The use of this method is strongly discouraged, it
 	 * is useful only when speed is critical.
 	 */
-	public final char[]
+	public final int[]
 	getData()
 	{
 		return beg;
@@ -278,7 +279,7 @@ public class CharArray
 	 * the representation). The use of this method is strongly discouraged, it
 	 * is useful only when speed is critical.
 	 */
-	public final char[]
+	public final int[]
 	data()
 	{
 		return beg;
@@ -290,7 +291,7 @@ public class CharArray
 	 * @param value The value to add.
 	 */
 	public void
-	incr( int i, char value )
+	incr( int i, int value )
 	{
 		if( i < 0 || i >= pte )
 			throw new InvalidIndexException( i );
@@ -304,7 +305,7 @@ public class CharArray
 	 * @param value The multiplier.
 	 */
 	public void
-	mult( int i, char value )
+	mult( int i, int value )
 	{
 		if( i < 0 || i >= pte )
 			throw new InvalidIndexException( i );
@@ -374,7 +375,7 @@ public class CharArray
 	 * Set the i-th item to value.
 	 */
 	public void
-	set( int i, char value )
+	set( int i, int value )
 		throws InvalidIndexException
 	{
 		if( i < 0 || i >= pte )
@@ -389,7 +390,7 @@ public class CharArray
 	 * Set the i-th item to value.
 	 */
 	public void
-	setItem( int i, char value )
+	setItem( int i, int value )
 		throws InvalidIndexException
 	{
 		if( i < 0 || i >= pte )
@@ -405,7 +406,7 @@ public class CharArray
 	 * a factor of two.
 	 */
 	public void
-	add( char value )
+	add( int value )
 	{
 		if( pte == cap )
 		{
@@ -425,7 +426,7 @@ public class CharArray
 	}
 
 	public void
-	add( char values[], int offset, int length )
+	add( int values[], int offset, int length )
 	{
 		if( cap - pte < length )
 		{
@@ -454,7 +455,7 @@ public class CharArray
 	 * a factor of two.
 	 */
 	public void
-	putBack( char value )
+	putBack( int value )
 	{
 		add( value );
 	}
@@ -481,7 +482,7 @@ public class CharArray
 	 * Insert the value before the i-th cell.
 	 */
 	public void
-	put( char value, int i )
+	put( int value, int i )
 		throws InvalidIndexException
 	{
 		if( i >= pte )
@@ -535,14 +536,14 @@ public class CharArray
 	 * Exchange the contents of other with this in O(1).
 	 */
 	public void
-	swap( CharArray other )
+	swap( IntegerArray other )
 	{
 		if( other == this )
 		{
 			return;
 		}
 
-		char[] t1;
+		int[] t1;
 		int t2;
 
 		t1        = beg;
@@ -558,6 +559,41 @@ public class CharArray
 		other.cap = t2;
 	}
 
+// Access
+	
+	/**
+	 * Search for the given element.
+	 * 
+	 * @returns The index of the element if found, else -1.
+	 */
+	public int
+	search( int element )
+	{
+		int n = beg.length;
+		
+		for( int i=0; i<n; i++ )
+		{
+			if( beg[i] == element )
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public Iterator<Integer>
+	iterator()
+	{
+		return new Iterator<Integer>()
+		{
+			int pos = 0;
+			public boolean hasNext() { return (pos<pte); }
+			public Integer next() { return beg[pos++]; }
+			public void remove() { throw new UnsupportedOperationException(); }
+		};
+	}
+	
 // Commands -- Utility
 	
 	/**
@@ -573,10 +609,10 @@ public class CharArray
 	protected void
 	allocate( int count, boolean keep )
 	{
-		char[] new_beg;
+		int[] new_beg;
 		int      old_count;
 		
-		new_beg = new char [ count ];
+		new_beg = new int [ count ];
 	
 		if( keep && beg != null )
 		{

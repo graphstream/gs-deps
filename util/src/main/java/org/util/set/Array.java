@@ -1,5 +1,6 @@
 package org.util.set;
 
+import java.util.Iterator;
 
 /**
  * Object sequence.
@@ -539,6 +540,41 @@ public class Array
 		other.cap = t2;
 	}
 
+// Access
+	
+	/**
+	 * Search for the given element.
+	 * 
+	 * @returns The index of the element if found, else -1.
+	 */
+	public int
+	search( Object element )
+	{
+		int n = beg.length;
+		
+		for( int i=0; i<n; i++ )
+		{
+			if( beg[i] == element )
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public Iterator<Object>
+	iterator()
+	{
+		return new Iterator<Object>()
+		{
+			int pos = 0;
+			public boolean hasNext() { return (pos<pte); }
+			public Object next() { return beg[pos++]; }
+			public void remove() { throw new UnsupportedOperationException(); }
+		};
+	}
+	
 // Commands -- Utility
 	
 	/**
