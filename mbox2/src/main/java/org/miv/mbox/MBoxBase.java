@@ -7,7 +7,7 @@ import java.util.*;
  * 
  * <p>
  * The goal of this implementation is to provide a base to construct other
- * classes able to handle messages comming from different sources and threads.
+ * classes able to handle messages coming from different sources and threads.
  * The presupposed in this class is that the inheriting class will check
  * messages at regular time using the method {@link #processMessages()}.
  * </p>
@@ -75,26 +75,24 @@ implements
 	{
 		int n;
 		
-		// We first copy the messages in a temporary buffer in order to let
-		// the synchronised block be as short as possible. This avoids that
+		// We first swap the messages with a temporary buffer in order to let
+		// the synchronized block be as short as possible. This avoids that
 		// sending threads be blocked a long time when posting to this object.
 		// Indeed, we do not know the time used by processMessage(), but it can
 		// be quite long.
 		
 		synchronized( this )
 		{
-			n = messages.size();
-			
-			if( n > 0 )
-			{
-				mtmp.ensureCapacity( n );
-				mtmp.addAll( messages );
-				messages.clear();
-			}
+			ArrayList<Message> tmp = messages;
+			messages = mtmp;
+			mtmp = tmp;
 		}
 		
 		// Then we really process the messages in our own thread without
-		// blocking.
+		// blocking using the swapped array, the other array is free to
+		// receive messages from another thread.
+		
+		n = mtmp.size();
 		
 		for( int i=0; i<n; ++i )
 		{
@@ -135,7 +133,7 @@ implements
 	}
 	
 	/**
-	 * Method to override to process each incomming message.
+	 * Method to override to process each incoming message.
 	 * @param from The address of the sender.
 	 * @param data The data sent by the sender.
 	 */
